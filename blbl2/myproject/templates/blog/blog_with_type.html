@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% extends 'header.html'%}
+    <meta charset="UTF-8">
+    <title>{{ blog_type.blog_name }}</title>
+    {% block header_extends %}{% endblock %}
+</head>
+<body>
+{% block content %}
+<div class="containter">
+    <div class="row">
+        <div class="col-xs-6 col-xs-offset-3">
+            <!--             <p> <span>共有{{ blogs|length}}博客</span></p>-->
+            <span style="font-size:18px;color:orange;border-bottom:1px dashed pink;">共有{{ blogs_num }}篇{{ blog_type.type_name }}</span>
+
+            {% for blog in page_of_blogs.object_list %}
+            <h3><a href="{% url 'blog:blog_detail' blog.id %}">标题：{{ blog.title }}</a></h3>
+            <span style="font-size:12px">类型：{{ blog.blog_type }}</span>
+            <p>{{ blog.content|truncatechars:15}}</p>
+            <span>作者：{{ blog.author }}</span>
+            {% empty %}
+            <span>暂时没有文章</span>
+            {% endfor %}
+            <div>
+                <ul class="pagination">
+
+                    <li>
+                        {% if page_of_blogs.has_previous %}
+                        <a href="?page={{ page_of_blogs.previous_page_number }}" aria-label="Previous">
+                            上一页<span aria-hidden="true">&laquo;</span>
+                        </a>
+
+                        {% else %}
+                        <span aria-hidden="true">&laquo;</span>
+                        {% endif %}
+                    </li>
+
+
+                    <!--            遍历循环出页数-->
+                    {% for page_num in page_range %}
+                    <!--                        判断是否当前页,高亮-->
+                    {% if page_num == page_of_blogs.number %}
+                    <li class="active"><a href="?page={{ page_num }}">{{ page_num }}</a></li>
+                    {% else %}
+                    <li><a href="?page={{ page_num }}">{{ page_num }}</a></li>
+                    {% endif %}
+
+
+                    {% endfor %}
+                    <li>
+                        {% if page_of_blogs.has_next %}
+                        <a href="?page={{ page_of_blogs.next_page_number }}" aria-label="Next">
+                            下一页<span aria-hidden="true">&laquo;</span>
+                            {% else %}
+                            <span aria-hidden="true">&laquo;</span>
+                            {% endif %}
+
+                    </li>
+                </ul>
+                <div style="color:orange;">
+                    <p>共有{{ page_of_blogs.paginator.count}}文章,当前第{{ page_of_blogs.number }}页,
+                        共有{{ page_of_blogs.paginator.num_pages }}页
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}
+
+</body>
+</html>

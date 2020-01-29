@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load staticfiles %}
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <script type="text/javascript" rel="stylesheet" src="{% static 'js/jquery-3.0.0.min.js'%}"></script>
+    <script type="text/javascript" rel="stylesheet" src="{% static 'js/bootstrap.min.js'%}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css'%}">
+    {% block header_extends %}{% endblock %}
+</head>
+<body>
+<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    <ul class="nav navbar-nav">
+        <li class="active"><a href="#">首页 <span class="sr-only">(current)</span></a></li>
+        <li><a href="{% url 'blog:all_blogs'%}">全部文章</a></li>
+        <li><a href="http://127.0.0.1:8000/blog/type/1">玄幻小说</a></li>
+        <li><a href="http://127.0.0.1:8000/blog/type/3">修真</a></li>
+        <li><a href="http://127.0.0.1:8000/blog/type/2">科幻</a></li>
+
+        <li><a href="{% url 'account:reg'%}">垃圾</a></li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+               aria-expanded="false">Dropdown <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="#">Separated link</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="#">One more separated link</a></li>
+            </ul>
+        </li>
+    </ul>
+    <form class="navbar-form navbar-left">
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Search">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+
+    <ul class="nav navbar-nav navbar-right">
+
+        {% if not user.is_authenticated %}
+        <li><a href="{% url 'account:login'%}?from={{ request.get_full_path }}">登录</a></li>
+        <li><a href="{% url 'account:user_register'%}?from={{ request.get_full_path}}">注册</a></li>
+        {% else %}
+        <li><a>用户名：
+            {% if user.has_nickname %}
+                {{ user.username }}({{ user.get_nickname }})
+            {% else %}
+                {{ user.username }}
+            {% endif %}
+        </a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" >用户信息<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="{% url 'account:user_info'%}">个人资料</a>
+              <li><a href="{% url 'account:change_password'%}">修改密码</a></li>
+            <li><a href="#">后台管理</a></li>
+            <li><a href="#"></a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="{% url 'account:logout'%}?from={{ request.get_full_path }}">退出登录</a></li>
+          </ul>
+        </li>
+
+        {% endif %}
+
+    </ul>
+</div><!-- /.navbar-collapse -->
+{% block content %}{% endblock %}
+{% block script_extends %}{% endblock %}
+
+</body>
+</html>
